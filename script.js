@@ -13,12 +13,12 @@ function findBar() {
     const userLat = pos.coords.latitude;
     const userLng = pos.coords.longitude;
 
-    // Get sun position at your location now
+    // Sun position
     const sunPos = SunCalc.getPosition(new Date(), userLat, userLng);
     const sunAzimuth = (sunPos.azimuth * 180) / Math.PI + 180;
 
-    // Fetch nearby bars using Google Places API
-    const radius = 800; // meters
+    // Google Places API
+    const radius = 800;
     const placesUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${userLat},${userLng}&radius=${radius}&type=bar&key=${googleApiKey}`;
 
     try {
@@ -31,7 +31,6 @@ function findBar() {
         return;
       }
 
-      // Bearing calculator
       function getBearing(lat1, lon1, lat2, lon2) {
         const toRad = deg => deg * (Math.PI / 180);
         const toDeg = rad => rad * (180 / Math.PI);
@@ -42,27 +41,46 @@ function findBar() {
         return (toDeg(Math.atan2(y, x)) + 360) % 360;
       }
 
-      // Filter bars that match sunlight
-      const sunnyBars = bars.filter(bar => {
-        if (!bar.geometry) return false;
+      const sunnyBars = bars.map(bar => {
+        if (!bar.geometry) return null;
+
         const lat = bar.geometry.location.lat;
         const lng = bar.geometry.location.lng;
         const bearing = getBearing(userLat, userLng, lat, lng);
-        const diff = Math.abs(bearing - sunAzimuth);
-        return diff <= 45 || diff >= 315;
-      });
+        let diff = Math.abs(bearing - sunAzimuth);
+        if (diff > 180) diff = 360 - diff; // normalize to 0–180°
+
+        // Sunlight exposure levels
+        let exposure = "🌑 No Sun";
+        if (diff <= 15) {
+          exposure = "☀️ Full Sun";
+        } else if (diff <= 30) {
+          exposure = "🌤️ Mostly Sunny (70%)";
+        } else if (diff <= 45) {
+          exposure = "⛅ Partial Sun (50%)";
+        } else {
+          return null; // Don't show bars out of sun range
+        }
+
+        return {
+          name: bar.name,
+          lat,
+          lng,
+          rating: bar.rating || "N/A",
+          exposure
+        };
+      }).filter(Boolean);
 
       if (sunnyBars.length === 0) {
         result.innerHTML = "🌥️ No bars currently in the sun nearby.";
       } else {
         result.innerHTML = `<h3>☀️ Bars currently in the sun:</h3>`;
         sunnyBars.forEach(bar => {
-          const lat = bar.geometry.location.lat;
-          const lng = bar.geometry.location.lng;
           result.innerHTML += `
             <p>🍹 <strong>${bar.name}</strong><br/>
-            ⭐ Rating: ${bar.rating || "N/A"}<br/>
-            📍 <a href="https://maps.google.com/?q=${lat},${lng}" target="_blank">
+            ${bar.exposure}<br/>
+            ⭐ Rating: ${bar.rating}<br/>
+            📍 <a href="https://maps.google.com/?q=${bar.lat},${bar.lng}" target="_blank">
               Get Directions
             </a></p>`;
         });
