@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Georgia', serif;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.wrapper {
+  text-align: center;
+}
+
+h1 {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+button {
+  font-size: 16px;
+  padding: 14px 30px;
+  border-radius: 14px;
+  background-color: #FFD700;
+  border: none;
+  color: black;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #f4c000;
+}
