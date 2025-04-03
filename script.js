@@ -20,7 +20,6 @@ function findBar() {
       const data = await response.json();
       const temp = data.main.temp;
       const description = data.weather[0].description;
-      const icon = data.weather[0].icon;
 
       result.innerHTML = `
         <p>🌤️ It’s currently <strong>${temp}°C</strong> with ${description} near you.</p>
