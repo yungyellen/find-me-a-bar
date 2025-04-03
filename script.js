@@ -12,8 +12,15 @@ function findBar() {
     const userLng = pos.coords.longitude;
 
     // Get sun position at your location now
-    const sunPos = SunCalc.getPosition(new Date(), userLat, userLng);
-    const sunAzimuth = (sunPos.azimuth * 180) / Math.PI + 180; // convert to degrees
+   const sunPos = SunCalc.getPosition(new Date(), userLat, userLng);
+const sunAzimuth = (sunPos.azimuth * 180) / Math.PI + 180;
+const sunAltitude = (sunPos.altitude * 180) / Math.PI;
+
+if (sunAltitude <= 0) {
+  result.innerHTML = "🌙 It’s currently dark — no sunlit bars right now. Try again in the morning!";
+  return;
+}
+
 
     // MOCK BARS (around you)
     const bars = [
