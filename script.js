@@ -24,8 +24,6 @@ function findBar() {
     const hoursAhead = parseInt(document.getElementById("time-slider").value);
     const sunTime = new Date(Date.now() + hoursAhead * 60 * 60 * 1000);
 
-   
-
     // ☀️ Get sun azimuth
     const sunPos = SunCalc.getPosition(sunTime, userLat, userLng);
     const sunAzimuth = (sunPos.azimuth * 180) / Math.PI + 180;
