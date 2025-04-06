@@ -2,18 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Find Me a Bar</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://unpkg.com/suncalc@1.9.0/suncalc.js"></script>
 </head>
 <body>
   <div class="wrapper">
     <h1>Find me a bar in the sun</h1>
+
+    <!-- 🌞 Time Slider -->
+    <label for="time-slider">Sun at: <span id="slider-label">Now</span></label>
+    <input type="range" id="time-slider" min="0" max="7" step="1" value="0" />
+    <small>(Now, +1h, +2h, ... up to +7h)</small>
+
     <button onclick="findBar()">GO</button>
+
     <div id="result"></div>
   </div>
 
+  <script src="https://unpkg.com/suncalc@1.9.0/suncalc.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
