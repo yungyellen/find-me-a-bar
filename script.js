@@ -24,15 +24,7 @@ function findBar() {
     const hoursAhead = parseInt(document.getElementById("time-slider").value);
     const sunTime = new Date(Date.now() + hoursAhead * 60 * 60 * 1000);
 
-    // 🌧️ Check weather
-    const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${userLat}&lon=${userLng}&appid=${weatherApiKey}`;
-    const weatherRes = await fetch(weatherUrl);
-    const weatherData = await weatherRes.json();
-    const conditions = weatherData.weather[0].main.toLowerCase();
-    if (conditions.includes("rain") || conditions.includes("storm")) {
-      result.innerHTML = "☔️ Oops! It's raining right now — no sunlit bars at the moment.";
-      return;
-    }
+   
 
     // ☀️ Get sun azimuth
     const sunPos = SunCalc.getPosition(sunTime, userLat, userLng);
